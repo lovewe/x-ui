@@ -17,6 +17,7 @@ import (
 	"os"
 	"runtime"
 	"time"
+	"x-ui/config"
 	"x-ui/logger"
 	"x-ui/util/sys"
 	"x-ui/xray"
@@ -50,6 +51,9 @@ type Status struct {
 		ErrorMsg string       `json:"errorMsg"`
 		Version  string       `json:"version"`
 	} `json:"xray"`
+	Xui struct {
+		Version string `json:"version"`
+	} `json:"xui"`
 	Uptime   uint64    `json:"uptime"`
 	Loads    []float64 `json:"loads"`
 	TcpCount int       `json:"tcpCount"`
@@ -166,7 +170,7 @@ func (s *ServerService) GetStatus(lastStatus *Status) *Status {
 		status.Xray.ErrorMsg = s.xrayService.GetXrayResult()
 	}
 	status.Xray.Version = s.xrayService.GetXrayVersion()
-
+	status.Xui.Version = config.GetVersion()
 	return status
 }
 

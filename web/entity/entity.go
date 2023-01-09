@@ -37,6 +37,8 @@ type AllSetting struct {
 	TgBotChatId        int    `json:"tgBotChatId" form:"tgBotChatId"`
 	TgRunTime          string `json:"tgRunTime" form:"tgRunTime"`
 	XrayTemplateConfig string `json:"xrayTemplateConfig" form:"xrayTemplateConfig"`
+	XrayCustomConfig   string `json:"xrayCustomConfig" form:"xrayCustomConfig"`
+	XrayCustomEnable   string `json:"xrayCustomEnable" form:"xrayCustomEnable"`
 
 	TimeLocation string `json:"timeLocation" form:"timeLocation"`
 }
@@ -68,12 +70,18 @@ func (s *AllSetting) CheckValid() error {
 	}
 
 	xrayConfig := &xray.Config{}
-	err := json.Unmarshal([]byte(s.XrayTemplateConfig), xrayConfig)
-	if err != nil {
-		return common.NewError("xray template config invalid:", err)
+	if s.XrayCustomEnable != "true" {
+		err := json.Unmarshal([]byte(s.XrayTemplateConfig), xrayConfig)
+		if err != nil {
+			return common.NewError("xray template config invalid:", err)
+		}
+	} else {
+		err := json.Unmarshal([]byte(s.XrayCustomConfig), xrayConfig)
+		if err != nil {
+			return common.NewError("xray custom config invalid:", err)
+		}
 	}
-
-	_, err = time.LoadLocation(s.TimeLocation)
+	_, err := time.LoadLocation(s.TimeLocation)
 	if err != nil {
 		return common.NewError("time location not exist:", s.TimeLocation)
 	}

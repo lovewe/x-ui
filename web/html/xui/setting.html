@@ -68,7 +68,9 @@
                         </a-tab-pane>
                         <a-tab-pane key="3" tab="xray 相关设置">
                             <a-list item-layout="horizontal" style="background: white">
+                                <setting-list-item type="switch" title="使用自定义配置" desc="已自定义配置启动xray，重启面板生效"  v-model="allSetting.xrayCustomEnable"></setting-list-item>
                                 <setting-list-item type="textarea" title="xray 配置模版" desc="以该模版为基础生成最终的 xray 配置文件，重启面板生效" v-model="allSetting.xrayTemplateConfig"></setting-list-item>
+                                <setting-list-item type="textarea" title="xray 自定义配置" desc="以该 xray 配置文件启动 xray，重启面板生效" v-model="allSetting.xrayCustomConfig"></setting-list-item>
                             </a-list>
                         </a-tab-pane>
                         <a-tab-pane key="4" tab="TG提醒相关设置">

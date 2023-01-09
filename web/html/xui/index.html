@@ -82,14 +82,22 @@
                     </a-col>
                     <a-col :sm="24" :md="12">
                         <a-card hoverable>
-                            运行时间:
-                            <a-tag color="#87d068">[[ formatSecond(status.uptime) ]]</a-tag>
-                            <a-tooltip>
-                                <template slot="title">
-                                    系统自启动以来的运行时间
-                                </template>
-                                <a-icon type="question-circle" theme="filled"></a-icon>
-                            </a-tooltip>
+                            <a-row>
+                                <a-col :span="12">
+                                    运行时间:
+                                    <a-tag color="#87d068">[[ formatSecond(status.uptime) ]]</a-tag>
+                                    <a-tooltip>
+                                        <template slot="title">
+                                            系统自启动以来的运行时间
+                                        </template>
+                                        <a-icon type="question-circle" theme="filled"></a-icon>
+                                    </a-tooltip>
+                                </a-col>
+                                <a-col :span="12">
+                                    x-ui版本:
+                                    <a-tag color="green">[[ status.xui.version ]]</a-tag>
+                                </a-col>
+                            </a-row>
                         </a-card>
                     </a-col>
                     <a-col :sm="24" :md="12">
@@ -226,7 +234,7 @@
             this.udpCount = 0;
             this.uptime = 0;
             this.xray = {state: State.Stop, errorMsg: "", version: "", color: ""};
-
+            this.xui = {version: ""}
             if (data == null) {
                 return;
             }
@@ -241,6 +249,7 @@
             this.udpCount = data.udpCount;
             this.uptime = data.uptime;
             this.xray = data.xray;
+            this.xui = data.xui;
             switch (this.xray.state) {
                 case State.Running:
                     this.xray.color = "green";

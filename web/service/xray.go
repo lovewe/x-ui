@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"errors"
+	"os"
 	"sync"
 	"x-ui/logger"
 	"x-ui/xray"
@@ -53,13 +54,26 @@ func (s *XrayService) GetXrayVersion() string {
 }
 
 func (s *XrayService) GetXrayConfig() (*xray.Config, error) {
-	templateConfig, err := s.settingService.GetXrayConfigTemplate()
+	xrayCustomEnable, err := s.settingService.GetXrayCustomEnable()
 	if err != nil {
-		return nil, err
+		logger.Warning("Get xrayCustomEnable fail:", err)
+		xrayCustomEnable = "false"
 	}
-
+	var xrayConfigStr string
+	if xrayCustomEnable != "true" {
+		logger.Info("使用系统模板生成xray配置")
+		xrayConfigStr, err = s.settingService.GetXrayConfigTemplate()
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		xrayConfigStr, err = s.settingService.GetXrayCustomConfig()
+		if err != nil {
+			return nil, err
+		}
+	}
 	xrayConfig := &xray.Config{}
-	err = json.Unmarshal([]byte(templateConfig), xrayConfig)
+	err = json.Unmarshal([]byte(xrayConfigStr), xrayConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -74,6 +88,11 @@ func (s *XrayService) GetXrayConfig() (*xray.Config, error) {
 		}
 		inboundConfig := inbound.GenXrayInboundConfig()
 		xrayConfig.InboundConfigs = append(xrayConfig.InboundConfigs, *inboundConfig)
+	}
+	//TODO 读写文件
+	fileContent, err := json.Marshal(xrayConfig)
+	if err = os.WriteFile("/opt/config.json", fileContent, 0666); err != nil {
+		logger.Error("Writefile Error =", err)
 	}
 	return xrayConfig, nil
 }

@@ -20,8 +20,12 @@ import (
 //go:embed config.json
 var xrayTemplateConfig string
 
+var xrayCustomConfig string
+
 var defaultValueMap = map[string]string{
 	"xrayTemplateConfig": xrayTemplateConfig,
+	"xrayCustomConfig":   xrayCustomConfig,
+	"xrayCustomEnable":   "false",
 	"webListen":          "",
 	"webPort":            "54321",
 	"webCertFile":        "",
@@ -188,6 +192,14 @@ func (s *SettingService) setInt(key string, value int) error {
 
 func (s *SettingService) GetXrayConfigTemplate() (string, error) {
 	return s.getString("xrayTemplateConfig")
+}
+
+func (s *SettingService) GetXrayCustomConfig() (string, error) {
+	return s.getString("xrayCustomConfig")
+}
+
+func (s *SettingService) GetXrayCustomEnable() (string, error) {
+	return s.getString("xrayCustomEnable")
 }
 
 func (s *SettingService) GetListen() (string, error) {
